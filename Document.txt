@@ -1,0 +1,54 @@
+Solution Design
+
+Data Ingestion:
+
+The pipeline will read CSV files containing data for groups of 5 turbines each.
+Each turbine's data is consistently located in the same CSV file (e.g., data_group_1.csv for turbines 1-5).
+The pipeline will read data files daily, ensuring the latest data is ingested.
+Data Cleaning:
+
+Handling Missing Values: Missing values will be imputed using forward fill or replaced with the mean of the respective turbine’s historical data to ensure continuity.
+Outlier Detection and Removal: Outliers will be identified using the Z-score method (standard deviation) or other statistical methods like IQR (Interquartile Range) and will be removed or replaced with appropriate values.
+Calculation of Summary Statistics:
+
+For each turbine, calculate the minimum, maximum, and average power output over a given time period, such as 24 hours.
+Anomaly Detection:
+
+Identify turbines whose power output significantly deviates from the expected range, defined as values outside 2 standard deviations from the mean for each turbine over the given time period.
+Data Storage:
+
+Store the cleaned data and summary statistics in a SQLite database. Tables will include raw data, cleaned data, and summary statistics to facilitate further analysis.
+Scalability and Testability:
+
+The code is modular, with separate functions for each processing step, making the pipeline scalable and easy to test.
+Implementation Steps
+Extract and Read Data:
+
+Extract data from provided CSV files and inspect the format.
+Clean the Data:
+
+Handle missing values and detect/remove outliers.
+Compute Summary Statistics:
+
+Calculate min, max, and average power output for each turbine.
+Identify Anomalies:
+
+Use statistical thresholds to flag anomalies.
+Store Data in Database:
+
+Save cleaned data and summary statistics for future analysis.
+
+
+Python code (renewable.py)
+
+How the Code Works:
+Cleaning: The code handles missing data with forward fill and mean replacement and removes outliers using Z-score.
+Statistics: Calculates key statistics (min, max, average) for each turbine.
+Anomalies: Identifies anomalies based on deviations beyond 2 standard deviations from the mean.
+Storage: Saves all relevant data in a SQLite database.
+Assumptions:
+Missing data due to sensor malfunctions is imputed reasonably to maintain data continuity.
+Anomalies are identified purely based on statistical analysis without domain-specific thresholds.
+Testing and Scalability:
+The pipeline is designed to be modular, allowing for easy expansion and individual component testing.
+The pipeline can be adapted to more complex storage and anomaly detection methods as the system evolves.
